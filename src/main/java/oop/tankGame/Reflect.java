@@ -1,4 +1,4 @@
-package oop.tankGame;
+package main.java.oop.tankGame;
 
 /*
  * Programmer(s): Talon; Colton
@@ -19,12 +19,10 @@ import java.io.*;
 import javax.imageio.ImageIO;
 import java.lang.*;
 
-public class Reflect extends Object
-{
-	BufferedImage	back;
+public class Reflect extends Object {
+	BufferedImage back;
 
-	public Reflect(BufferedImage back)
-	{
+	public Reflect(BufferedImage back) {
 		this.back = back;
 
 		// BufferedImage ref = back.Reflect();

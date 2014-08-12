@@ -1,4 +1,4 @@
-package oop.tankGame;
+package main.java.oop.tankGame;
 
 /*
  * Programmer(s): Talon; Colton
@@ -20,13 +20,17 @@ import java.awt.event.*;
 import java.awt.image.*;
 import java.io.*;
 import java.util.*;
+import java.util.List;
+
 import javax.swing.*;
 import javax.swing.Timer;
 
 public class TankPaint extends JPanel implements MouseListener, ActionListener,
 		MouseMotionListener {
 	static BufferedImage background;
+	public static TankPaint Instance;
 	private BufferedImage top, base, tread, bullet;
+	public TargetObject woodObject, brickObject, enemyObject;
 	Image explode = Toolkit.getDefaultToolkit().getImage(
 			Option.imageDir + Option.FILE_SEPARATOR + "ex1.gif");
 	private Graphics g;
@@ -54,12 +58,14 @@ public class TankPaint extends JPanel implements MouseListener, ActionListener,
 													// location anywhere
 
 	int blowupRange;
+	List<TargetObject> targetObjects;
 
 	// ///
 
 	public TankPaint(String back, String top, String base, String tread,
-			String bullet) {
+			String bullet, String wood, String brick, String enemy) {
 		super();
+		Instance = this;
 
 		try {
 			String backgroundPath = Option.backgroundDir
@@ -70,6 +76,33 @@ public class TankPaint extends JPanel implements MouseListener, ActionListener,
 			this.base = ImageIO.read(new File(imagePath + base));
 			this.tread = ImageIO.read(new File(imagePath + tread));
 			this.bullet = ImageIO.read(new File(imagePath + bullet));
+
+			// woodObject = new TargetObject(ImageIO.read(new File(imagePath +
+			// wood)), true, 0, 0);
+			 //brickObject = new TargetObject(ImageIO.read(new File(imagePath +
+			// brick)), false, 0, 100, beginX, beginY);
+
+			targetObjects = new ArrayList<TargetObject>();
+			targetObjects.add(new TargetObject(ImageIO.read(new File(imagePath
+					+ wood)), true, 550, 800, 50, 50));
+			targetObjects.add(new TargetObject(ImageIO.read(new File(imagePath
+					+ wood)), true, 600, 800, 50, 50));
+			targetObjects.add(new TargetObject(ImageIO.read(new File(imagePath
+					+ wood)), true, 1200, 588, 50, 50));
+			targetObjects.add(new TargetObject(ImageIO.read(new File(imagePath
+					+ wood)), true, 200, 600, 50, 50));
+
+			targetObjects.add(new TargetObject(ImageIO.read(new File(imagePath
+					+ enemy)), true, 1000, 450, 134, 70));
+			targetObjects.add(new TargetObject(ImageIO.read(new File(imagePath
+					+ enemy)), true, 400, 50, 134, 70));
+			targetObjects.add(new TargetObject(ImageIO.read(new File(imagePath
+					+ enemy)), true, 50, 600, 134, 70));
+
+			targetObjects.add(new TargetObject(ImageIO.read(new File(imagePath
+					+ brick)), false, 800, 600, 50, 50));
+			targetObjects.add(new TargetObject(ImageIO.read(new File(imagePath
+					+ brick)), false, 900, 600, 50, 50));
 		} catch (IOException ex) {
 			System.out.println("Error as loading images!" + ex);
 		}
@@ -120,6 +153,11 @@ public class TankPaint extends JPanel implements MouseListener, ActionListener,
 		AffineTransform transform = new AffineTransform();
 
 		g.drawImage(background, backgroundX, backgroundY, this);
+		// woodObject.Draw(g, this);
+		// brickObject.Draw(g, this);
+		for (TargetObject t : targetObjects) {
+			t.Draw(g, this);
+		}
 
 		// drawing bullet part
 		if (player.isShooting) {
@@ -153,6 +191,30 @@ public class TankPaint extends JPanel implements MouseListener, ActionListener,
 
 		blowupRange = radius / 2;
 		// </debugging>
+	}
+
+	// check if there is any object at this postion, return true if there is
+	public boolean CheckTargetObject(int x, int y) {
+		for (TargetObject t : targetObjects) {
+			if (t.isVisible && x >= t.posX && x <= t.posX + t.lengX
+					&& y >= t.posY && y <= t.posY + t.lengY) {
+				System.out.println("object at " + x + ", " + y);
+				return true;
+			}
+		}
+		return false;
+	}
+
+	// destroy any object at this position
+	public void DestroyTargetObject(int x, int y) {
+		for (TargetObject t : targetObjects) {
+			if (t.isVisible && t.isDestroyable && x >= t.posX
+					&& x <= t.posX + t.lengX && y >= t.posY
+					&& y <= t.posY + t.lengY) {
+				System.out.println("destroy object at " + x + ", " + y);
+				t.isVisible = false;
+			}
+		}
 	}
 
 	private void move() {

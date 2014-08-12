@@ -1,4 +1,4 @@
-package oop.tankGame;
+package main.java.oop.tankGame;
 
 /*
  * Programmer(s): Talon; Colton
@@ -14,7 +14,7 @@ import java.awt.event.*;
 import java.awt.*;
 
 public class Tanks extends JFrame {
-	String back, top, base, tread, bullet;
+	String back, top, base, tread, bullet, brick, wood, enemy;
 
 	TankPaint mainPanel;
 
@@ -24,11 +24,14 @@ public class Tanks extends JFrame {
 		tread = "tread 1";
 		back = "background.bmp";// "samplelevel.bmp";
 		bullet = "bullet.png";
+		brick = "brick.jpg";
+		wood = "wood.png";
+		enemy = "enemy.png";
 
 		setBackground(Color.black);
 
 		mainPanel = new TankPaint(back, top + ".gif", base + ".gif", tread
-				+ ".gif", bullet);
+				+ ".gif", bullet, wood, brick, enemy);
 
 		Image pointer = Toolkit.getDefaultToolkit().getImage(
 				Option.imageDir + Option.FILE_SEPARATOR + "pointer.gif");
